@@ -3,7 +3,6 @@ class Team < ApplicationRecord
   friendly_id :name
 
   validates :name, presence: true, uniqueness: true
-
   belongs_to :owner, class_name: 'User', foreign_key: :owner_id
   has_many :assigns, dependent: :destroy
   has_many :members, through: :assigns, source: :user
@@ -11,8 +10,13 @@ class Team < ApplicationRecord
   has_many :agendas, dependent: :destroy
   has_many :users, foreign_key: :keep_team_id
   mount_uploader :icon, ImageUploader
+  # before_update :hello_everyone
 
   def invite_member(user)
     assigns.create(user: user)
   end
+  # private
+  # def hello_everyone
+  #   throw :abort if  self.owner_id
+  # end
 end

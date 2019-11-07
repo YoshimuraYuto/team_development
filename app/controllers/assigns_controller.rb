@@ -1,6 +1,6 @@
 class AssignsController < ApplicationController
   before_action :authenticate_user!
-
+  before_action :hello_world, only: [:destroy]
   def create
     team = Team.friendly.find(params[:team_id])
     user = email_reliable?(assign_params) ? User.find_or_create_by_email(assign_params) : nil
@@ -20,6 +20,11 @@ class AssignsController < ApplicationController
   end
 
   private
+
+  def  hello_world
+    # throw :abort 
+    redirect_to teams_path if  current_user || team.owner_id != nil
+  end
 
   def assign_params
     params[:email]
