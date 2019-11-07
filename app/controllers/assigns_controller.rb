@@ -19,11 +19,10 @@ class AssignsController < ApplicationController
     redirect_to team_url(params[:team_id]), notice: destroy_message
   end
 
-  private
-
-  def  hello_world
-    # throw :abort 
-    redirect_to teams_path if  current_user || team.owner_id != nil
+  private 
+#Teamに所属しているUserの削除（離脱）は、そのTeamのオーナーか、そのUser自身しかできないようにすること
+  def hello_world
+    redirect_to teams_path unless current_user || @team.owner_id == current_user.id
   end
 
   def assign_params
