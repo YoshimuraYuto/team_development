@@ -21,8 +21,9 @@ class AssignsController < ApplicationController
 
   private 
 #Teamに所属しているUserの削除（離脱）は、そのTeamのオーナーか、そのUser自身しかできないようにすること
-  def hello_world
-    redirect_to teams_path unless current_user || @team.owner_id == current_user.id
+  def  hello_world
+    assign = Assign.find(params[:id])
+    redirect_to teams_path if current_user || assign.team.owner_id != current_user.id
   end
 
   def assign_params
@@ -31,10 +32,12 @@ class AssignsController < ApplicationController
 
   def assign_destroy(assign, assigned_user)
     if assigned_user == assign.team.owner
+
       'リーダーは削除できません。'
     elsif Assign.where(user_id: assigned_user.id).count == 1
       'このユーザーはこのチームにしか所属していないため、削除できません。'
     elsif assign.destroy
+
       set_next_team(assign, assigned_user)
       'メンバーを削除しました。'
     else
