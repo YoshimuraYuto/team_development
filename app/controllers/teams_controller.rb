@@ -9,6 +9,7 @@ class TeamsController < ApplicationController
   def show
     @working_team = @team
     change_keep_team(current_user, @team)
+    @users = User.all
   end
 
   def new
@@ -30,7 +31,9 @@ class TeamsController < ApplicationController
   end
 
   def update
+    @team.owner_id = params[:user_id]
     if @team.update(team_params)
+      TeamMailer.team_mail(@team).deliver  ##追記
       redirect_to @team, notice: 'チーム更新に成功しました！'
     else
       flash.now[:error] = '保存に失敗しました、、'
@@ -54,6 +57,6 @@ class TeamsController < ApplicationController
   end
 
   def team_params
-    params.fetch(:team, {}).permit %i[name icon icon_cache owner_id keep_team_id]
+    params.fetch(:team, {}).permit %i[name icon icon_cache owner_id keep_team_id user_id]
   end
 end

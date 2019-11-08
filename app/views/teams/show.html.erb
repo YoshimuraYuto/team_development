@@ -38,10 +38,14 @@
               <table class="table">
                 <tbody>
                   <% @team.assigns.each do |assign| %>
+                    
                     <tr>
                       <td><%= image_tag 'default.jpg', size: '40x40' %></td>
                       <td><%= assign.user.email %></td>
+                      <td><%=  assign.user_id %></td>
                       <td><%= link_to '削除', team_assign_path(@team, assign), method: :delete, class: 'btn btn-sm btn-danger' %></td>
+                    
+                        <td><%= link_to '権限移動',  team_path(@team, user_id: assign.user_id), method: :patch%></td>
                     </tr>
                   <% end %>
                 </tbody>
