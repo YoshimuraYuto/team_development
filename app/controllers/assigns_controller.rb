@@ -24,7 +24,7 @@ class AssignsController < ApplicationController
   def  hello_world
     @assign = Assign.find(params[:id])
     # redirect_to teams_path
-    redirect_to teams_path,  notice: "削除できません"  if current_user || @assign.team.owner_id != current_user.id
+    redirect_to team_path(@assign.team.id), notice: "削除できません"  if current_user || @assign.team.owner_id != current_user.id
   end
 
   def assign_params
