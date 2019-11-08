@@ -1,7 +1,7 @@
 class TeamsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_team, only: %i[show edit update destroy]
-
+  before_action :hello_everyone, only: [:edit]
   def index
     @teams = Team.all
   end
@@ -9,6 +9,7 @@ class TeamsController < ApplicationController
   def show
     @working_team = @team
     change_keep_team(current_user, @team)
+    @users = User.all
   end
 
   def new
@@ -32,13 +33,14 @@ class TeamsController < ApplicationController
   def update
     if @team.update(team_params)
       redirect_to @team, notice: 'チーム更新に成功しました！'
+      owner_id = @owner_id
     else
       flash.now[:error] = '保存に失敗しました、、'
       render :edit
     end
   end
 
-  def destroy
+  def  destroy
     @team.destroy
     redirect_to teams_url, notice: 'チーム削除に成功しました！'
   end
@@ -48,6 +50,11 @@ class TeamsController < ApplicationController
   end
 
   private
+  def hello_everyone
+    #TeamのeditはTeamのリーダー（オーナー）のみができるようにすること
+    redirect_to teams_path unless  @team.owner_id == current_user.id
+    
+  end
 
   def set_team
     @team = Team.friendly.find(params[:id])

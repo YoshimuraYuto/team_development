@@ -34,6 +34,7 @@
               <i class="fa fa-circle-o nav-icon"></i>
               <p>
                 <%= agenda.title %>
+                <%= link_to 'アジェンダを削除する', agenda_path(agenda.id), method: :delete, class: 'btn btn-primary' %>
                 <i class="right fa fa-angle-left"></i>
               </p>
             </a>

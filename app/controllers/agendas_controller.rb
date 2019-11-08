@@ -20,7 +20,10 @@ class AgendasController < ApplicationController
       render :new
     end
   end
-
+  def destroy
+    @agenda = Agenda.find(params[:id])
+    @agenda.destroy
+  end
   private
 
   def set_agenda

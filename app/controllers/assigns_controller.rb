@@ -1,6 +1,6 @@
 class AssignsController < ApplicationController
   before_action :authenticate_user!
-
+  before_action :hello_world, only: [:destroy]
   def create
     team = Team.friendly.find(params[:team_id])
     user = email_reliable?(assign_params) ? User.find_or_create_by_email(assign_params) : nil
@@ -19,7 +19,13 @@ class AssignsController < ApplicationController
     redirect_to team_url(params[:team_id]), notice: destroy_message
   end
 
-  private
+  private 
+#Teamに所属しているUserの削除（離脱）は、そのTeamのオーナーか、そのUser自身しかできないようにすること
+  def  hello_world
+    @assign = Assign.find(params[:id])
+    # redirect_to teams_path
+    redirect_to team_path(@assign.team.id), notice: "削除できません"  if current_user || @assign.team.owner_id != current_user.id
+  end
 
   def assign_params
     params[:email]
@@ -27,10 +33,12 @@ class AssignsController < ApplicationController
 
   def assign_destroy(assign, assigned_user)
     if assigned_user == assign.team.owner
+
       'リーダーは削除できません。'
     elsif Assign.where(user_id: assigned_user.id).count == 1
       'このユーザーはこのチームにしか所属していないため、削除できません。'
     elsif assign.destroy
+
       set_next_team(assign, assigned_user)
       'メンバーを削除しました。'
     else
