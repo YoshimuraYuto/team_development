@@ -9,6 +9,7 @@ class TeamsController < ApplicationController
   def show
     @working_team = @team
     change_keep_team(current_user, @team)
+    @users = User.all
   end
 
   def new
@@ -30,7 +31,9 @@ class TeamsController < ApplicationController
   end
 
   def update
+    binding.pry
     if @team.update(team_params)
+      owner.id = user.id
       redirect_to @team, notice: 'チーム更新に成功しました！'
     else
       flash.now[:error] = '保存に失敗しました、、'
