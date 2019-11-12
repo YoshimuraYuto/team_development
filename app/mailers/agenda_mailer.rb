@@ -1,6 +1,7 @@
 class AgendaMailer < ApplicationMailer
-  def agenda_mail(agenda)
+  def agenda_mail(agenda, email)
     @agenda = agenda
-    mail to: "@agenda.user.all", subject: "お問い合わせの確認メール"
+    # @email = email
+    mail to: email, subject: "お問い合わせの確認メール"
   end
 end
